@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= vacancy.title %> — Карьерный центр БГИТУ</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col">
+
+  <header class="bg-white shadow-sm">
+    <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+      <a href="/" class="text-xl sm:text-2xl font-bold text-blue-700 hover:text-blue-800 transition-colors">Карьерный центр БГИТУ</a>
+      <a href="/admin/login" class="text-sm text-gray-500 hover:text-blue-600 transition-colors">Админ</a>
+    </div>
+  </header>
+
+  <main class="flex-1 max-w-3xl mx-auto w-full px-4 py-6">
+
+    <a href="/" class="inline-flex items-center text-sm text-blue-600 hover:text-blue-800 mb-6 transition-colors">
+      ← Назад к списку
+    </a>
+
+    <article class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 sm:p-8">
+      <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-2"><%= vacancy.title %></h1>
+      <p class="text-lg text-gray-700 mb-4"><%= vacancy.company %></p>
+
+      <div class="flex flex-wrap gap-2 mb-6 text-sm">
+        <% if (vacancy.location) { %>
+          <span class="inline-flex items-center bg-gray-100 text-gray-700 rounded-full px-3 py-1">📍 <%= vacancy.location %></span>
+        <% } %>
+        <% if (vacancy.employment_type) { %>
+          <span class="inline-block bg-blue-50 text-blue-700 rounded-full px-3 py-1"><%= vacancy.employment_type %></span>
+        <% } %>
+        <span class="inline-block bg-gray-100 text-gray-500 rounded-full px-3 py-1"><%= new Date(vacancy.created_at).toLocaleDateString('ru-RU') %></span>
+      </div>
+
+      <% if (vacancy.description) { %>
+        <section class="mb-6">
+          <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2">Описание</h2>
+          <div class="text-gray-800 leading-relaxed whitespace-pre-line"><%= vacancy.description %></div>
+        </section>
+      <% } %>
+
+      <% if (vacancy.requirements) { %>
+        <section class="mb-6">
+          <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2">Требования</h2>
+          <div class="text-gray-800 leading-relaxed whitespace-pre-line"><%= vacancy.requirements %></div>
+        </section>
+      <% } %>
+
+      <% if (vacancy.contact_info) { %>
+        <section class="mb-6">
+          <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2">Контакты</h2>
+          <p class="text-gray-800"><%= vacancy.contact_info %></p>
+        </section>
+      <% } %>
+
+      <div class="mt-8 flex flex-col sm:flex-row gap-3">
+        <% if (vacancy.application_url) { %>
+          <a
+            href="<%= vacancy.application_url %>"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-block bg-blue-600 text-white text-center px-6 py-3 rounded-md font-medium hover:bg-blue-700 transition-colors"
+          >
+            Откликнуться
+          </a>
+        <% } else { %>
+          <span class="inline-block bg-gray-200 text-gray-500 text-center px-6 py-3 rounded-md font-medium cursor-not-allowed">
+            Откликнуться
+          </span>
+        <% } %>
+        <a
+          href="/"
+          class="inline-block border border-gray-300 text-gray-700 text-center px-6 py-3 rounded-md font-medium hover:bg-gray-50 transition-colors"
+        >
+          Назад к списку
+        </a>
+      </div>
+    </article>
+
+  </main>
+
+  <footer class="bg-white border-t mt-8">
+    <div class="max-w-6xl mx-auto px-4 py-4 text-center text-xs text-gray-400">
+      © <%= new Date().getFullYear() %> Карьерный центр БГИТУ
+    </div>
+  </footer>
+
+</body>
+</html>

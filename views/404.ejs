@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>404 — Карьерный центр БГИТУ</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col">
+
+  <header class="bg-white shadow-sm">
+    <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+      <a href="/" class="text-xl sm:text-2xl font-bold text-blue-700 hover:text-blue-800 transition-colors">Карьерный центр БГИТУ</a>
+      <a href="/admin/login" class="text-sm text-gray-500 hover:text-blue-600 transition-colors">Админ</a>
+    </div>
+  </header>
+
+  <main class="flex-1 flex items-center justify-center px-4">
+    <div class="text-center">
+      <p class="text-6xl font-bold text-blue-600 mb-4">404</p>
+      <p class="text-gray-600 text-lg mb-6">Вакансия не найдена</p>
+      <a href="/" class="inline-block bg-blue-600 text-white px-5 py-2 rounded-md text-sm font-medium hover:bg-blue-700 transition-colors">
+        На главную
+      </a>
+    </div>
+  </main>
+
+  <footer class="bg-white border-t mt-8">
+    <div class="max-w-6xl mx-auto px-4 py-4 text-center text-xs text-gray-400">
+      © <%= new Date().getFullYear() %> Карьерный центр БГИТУ
+    </div>
+  </footer>
+
+</body>
+</html>
