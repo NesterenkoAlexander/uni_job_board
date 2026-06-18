@@ -4,23 +4,30 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Панель управления — Админ-панель</title>
+  <link rel="icon" type="image/x-icon" href="/favicon.ico?v=2">
   <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .page-enter { opacity: 0; transform: translateY(12px); }
+    .page-visible { opacity: 1; transform: translateY(0); transition: opacity 0.4s ease, transform 0.4s ease; }
+  </style>
 </head>
-<body class="bg-gray-100 min-h-screen">
-  <nav class="bg-white shadow mb-6">
-    <div class="container mx-auto px-4 py-3 flex items-center justify-between">
-      <a href="/admin/dashboard" class="text-lg font-bold text-gray-800">Центр Карьеры БГИТУ</a>
-      <div class="flex items-center gap-4">
-        <a href="/admin/dashboard" class="text-gray-600 hover:text-gray-800">Вакансии</a>
-        <span class="text-gray-400">|</span>
-        <a href="/admin/logout" class="text-red-600 hover:text-red-800">Выйти</a>
-      </div>
-    </div>
-  </nav>
-  <div class="container mx-auto px-4">
+<body class="bg-gray-50 min-h-screen flex flex-col">
+  <%- include('../partials/admin_header') %>
+  <div class="flex-1 container mx-auto px-4 page-enter" id="pageContent">
     <h2 class="text-2xl font-bold text-gray-800 mb-4">Панель управления</h2>
     <p class="text-gray-600">Добро пожаловать, <%= adminUsername %>.</p>
     <p class="text-gray-500 mt-2">Управление вакансиями — скоро.</p>
   </div>
+
+  <footer class="bg-blue-800 py-6 text-sm text-white mt-8">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+      <p>© <%= new Date().getFullYear() %> ФГБОУ ВО «БГИТУ». Все права защищены.</p>
+      <p>Центр карьеры БГИТУ</p>
+    </div>
+  </footer>
+
+  <script>
+    requestAnimationFrame(() => document.getElementById('pageContent').classList.add('page-visible'));
+  </script>
 </body>
 </html>

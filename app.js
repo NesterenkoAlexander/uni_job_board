@@ -29,6 +29,18 @@ app.use(session({
 app.use('/', publicRoutes);
 app.use('/admin', adminRoutes);
 
+app.use((req, res) => {
+  res.status(404).render('404');
+});
+
+app.use((err, req, res, _next) => {
+  console.error(err.stack);
+  if (err.code === 'LIMIT_FILE_SIZE') {
+    return res.status(400).render('500', { message: 'Файл слишком большой. Максимум 5 МБ.' });
+  }
+  res.status(500).render('500');
+});
+
 app.listen(PORT, () => {
   console.log(`Сервер запущен на http://localhost:${PORT}`);
 });

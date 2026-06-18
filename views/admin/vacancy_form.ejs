@@ -4,33 +4,33 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><%= vacancy ? 'Редактирование' : 'Добавление' %> вакансии — Админ-панель</title>
+  <link rel="icon" type="image/x-icon" href="/favicon.ico?v=2">
   <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .page-enter { opacity: 0; transform: translateY(12px); }
+    .page-visible { opacity: 1; transform: translateY(0); transition: opacity 0.4s ease, transform 0.4s ease; }
+  </style>
 </head>
-<body class="bg-gray-100 min-h-screen">
-  <nav class="bg-white shadow mb-6">
-    <div class="container mx-auto px-4 py-3 flex items-center justify-between">
-      <a href="/admin/dashboard" class="text-lg font-bold text-gray-800">Центр Карьеры БГИТУ</a>
-      <div class="flex items-center gap-4">
-        <a href="/admin/vacancies" class="text-blue-600 font-medium">Вакансии</a>
-        <span class="text-gray-400">|</span>
-        <span class="text-gray-600"><%= adminUsername %></span>
-        <span class="text-gray-400">|</span>
-        <a href="/admin/logout" class="text-red-600 hover:text-red-800">Выйти</a>
-      </div>
-    </div>
-  </nav>
-  <div class="container mx-auto px-4">
+<body class="bg-gray-50 min-h-screen flex flex-col">
+  <%- include('../partials/admin_header') %>
+  <div class="flex-1 container mx-auto px-4 page-enter" id="pageContent">
     <div class="flex items-center gap-3 mb-6">
       <a href="/admin/vacancies" class="text-gray-500 hover:text-gray-700">&larr; Назад</a>
       <h2 class="text-2xl font-bold text-gray-800"><%= vacancy ? 'Редактирование вакансии' : 'Новая вакансия' %></h2>
     </div>
 
-    <form method="POST" action="<%= vacancy ? '/admin/vacancies/edit/' + vacancy.id : '/admin/vacancies/add' %>" class="bg-white rounded-lg shadow p-6 space-y-5 max-w-3xl">
+    <% if (error) { %>
+      <div class="bg-red-50 border border-red-300 text-red-700 px-4 py-3 rounded mb-4 max-w-3xl">
+        <%= error %>
+      </div>
+    <% } %>
+
+    <form method="POST" action="<%= vacancy && vacancy.id ? '/admin/vacancies/edit/' + vacancy.id : '/admin/vacancies/add' %>" enctype="multipart/form-data" class="bg-white rounded-lg shadow border border-gray-200 p-6 space-y-5 max-w-3xl">
       <div>
         <label for="title" class="block text-sm font-medium text-gray-700 mb-1">Название *</label>
         <input type="text" id="title" name="title" required
           value="<%= vacancy ? vacancy.title : '' %>"
-          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="w-full px-3 py-2 border border-blue-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="Например: Frontend-разработчик">
       </div>
 
@@ -39,14 +39,14 @@
           <label for="company" class="block text-sm font-medium text-gray-700 mb-1">Компания *</label>
           <input type="text" id="company" name="company" required
             value="<%= vacancy ? vacancy.company : '' %>"
-            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            class="w-full px-3 py-2 border border-blue-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Название компании">
         </div>
         <div>
           <label for="location" class="block text-sm font-medium text-gray-700 mb-1">Локация</label>
           <input type="text" id="location" name="location"
             value="<%= vacancy ? (vacancy.location || '') : '' %>"
-            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            class="w-full px-3 py-2 border border-blue-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Например: Брянск, удалённо">
         </div>
       </div>
@@ -54,7 +54,7 @@
       <div>
         <label for="employment_type" class="block text-sm font-medium text-gray-700 mb-1">Тип занятости</label>
         <select id="employment_type" name="employment_type"
-          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+          class="w-full px-3 py-2 border border-blue-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white">
           <option value="">— Не указан —</option>
           <option value="Полная" <%= vacancy && vacancy.employment_type === 'Полная' ? 'selected' : '' %>>Полная</option>
           <option value="Частичная" <%= vacancy && vacancy.employment_type === 'Частичная' ? 'selected' : '' %>>Частичная</option>
@@ -65,16 +65,36 @@
       </div>
 
       <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Фото вакансии</label>
+        <% if (vacancy && vacancy.images && vacancy.images.length > 0) { %>
+          <div class="flex flex-wrap gap-3 mb-3">
+            <% vacancy.images.forEach(img => { %>
+              <div class="relative group" id="img-<%= img.id %>">
+                <img src="<%= img.image_path %>" alt="Фото вакансии" class="h-28 w-28 rounded-md object-cover border border-gray-200">
+                <label class="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer rounded-md">
+                  <input type="checkbox" name="delete_images" value="<%= img.id %>" class="sr-only peer">
+                  <span class="text-white text-xs font-medium bg-red-600 px-2 py-1 rounded peer-checked:bg-red-800">Удалить</span>
+                </label>
+              </div>
+            <% }) %>
+          </div>
+        <% } %>
+        <input type="file" id="images" name="images" accept="image/*" multiple
+          class="w-full px-3 py-2 border border-blue-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:bg-blue-50 file:text-blue-700 file:font-medium hover:file:bg-blue-100">
+        <p class="text-xs text-gray-500 mt-1">Можно выбрать несколько фото. JPEG, PNG, GIF или WebP. Максимум 5 МБ каждое.</p>
+      </div>
+
+      <div>
         <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Описание</label>
         <textarea id="description" name="description" rows="5"
-          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="w-full px-3 py-2 border border-blue-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="Описание вакансии, обязанности..."><%= vacancy ? (vacancy.description || '') : '' %></textarea>
       </div>
 
       <div>
         <label for="requirements" class="block text-sm font-medium text-gray-700 mb-1">Требования</label>
         <textarea id="requirements" name="requirements" rows="4"
-          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="w-full px-3 py-2 border border-blue-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="Требования к кандидату..."><%= vacancy ? (vacancy.requirements || '') : '' %></textarea>
       </div>
 
@@ -83,25 +103,36 @@
           <label for="contact_info" class="block text-sm font-medium text-gray-700 mb-1">Контакты</label>
           <input type="text" id="contact_info" name="contact_info"
             value="<%= vacancy ? (vacancy.contact_info || '') : '' %>"
-            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            class="w-full px-3 py-2 border border-blue-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Email, телефон...">
         </div>
         <div>
           <label for="application_url" class="block text-sm font-medium text-gray-700 mb-1">Ссылка для отклика</label>
           <input type="url" id="application_url" name="application_url"
             value="<%= vacancy ? (vacancy.application_url || '') : '' %>"
-            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            class="w-full px-3 py-2 border border-blue-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="https://...">
         </div>
       </div>
 
       <div class="flex items-center gap-3 pt-2">
         <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition-colors">
-          <%= vacancy ? 'Сохранить изменения' : 'Создать вакансию' %>
+          <%= vacancy && vacancy.id ? 'Сохранить изменения' : 'Создать вакансию' %>
         </button>
         <a href="/admin/vacancies" class="text-gray-600 hover:text-gray-800">Отмена</a>
       </div>
     </form>
   </div>
+
+  <footer class="bg-blue-800 py-6 text-sm text-white mt-8">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+      <p>© <%= new Date().getFullYear() %> ФГБОУ ВО «БГИТУ». Все права защищены.</p>
+      <p>Центр карьеры БГИТУ</p>
+    </div>
+  </footer>
+
+  <script>
+    requestAnimationFrame(() => document.getElementById('pageContent').classList.add('page-visible'));
+  </script>
 </body>
 </html>

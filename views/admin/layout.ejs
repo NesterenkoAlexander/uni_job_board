@@ -3,20 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><%= typeof title !== 'undefined' ? title + ' — ' : '' %>Админ-панель — Центр Карьеры БГИТУ</title>
+  <title><%= typeof title !== 'undefined' ? title + ' — ' : '' %>Админ-панель — Центр карьеры БГИТУ</title>
+  <link rel="icon" type="image/x-icon" href="/favicon.ico?v=2">
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 min-h-screen">
-  <nav class="bg-white shadow mb-6">
-    <div class="container mx-auto px-4 py-3 flex items-center justify-between">
-      <a href="/admin/dashboard" class="text-lg font-bold text-gray-800">Центр Карьеры БГИТУ</a>
-      <div class="flex items-center gap-4">
-        <a href="/admin/vacancies" class="text-gray-600 hover:text-gray-800">Вакансии</a>
-        <span class="text-gray-400">|</span>
-        <a href="/admin/logout" class="text-red-600 hover:text-red-800">Выйти</a>
-      </div>
-    </div>
-  </nav>
+  <%- include('../partials/admin_header') %>
   <div class="container mx-auto px-4">
     <%- body %>
   </div>
