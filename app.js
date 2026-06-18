@@ -4,6 +4,7 @@ import session from 'express-session';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 
+import './db.js';
 import publicRoutes from './routes/public.js';
 import adminRoutes from './routes/admin.js';
 
@@ -29,5 +30,5 @@ app.use('/', publicRoutes);
 app.use('/admin', adminRoutes);
 
 app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+  console.log(`Сервер запущен на http://localhost:${PORT}`);
 });
